@@ -15,7 +15,15 @@ class AddressesSeeder extends Seeder
     public function run()
     {
         Address::factory()
-            ->count(4)
-            ->create();
+            ->count(2)
+            ->create([
+                'user_id' => 1
+            ]);
+
+        Address::factory()
+            ->count(2)
+            ->create([
+                'user_id' => 2
+            ]);
     }
 }
