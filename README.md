@@ -15,6 +15,9 @@ Client User:
 *Email: client1@test.com
 Password: pixarron2021*
 
+### API documentation
+https://documenter.getpostman.com/view/12059338/TVzViG2R
+
 ## Local Installation Process
 
 ### Step 1: Clone repository
