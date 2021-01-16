@@ -5,9 +5,10 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class ProductCollection extends ResourceCollection
+class PostCollection extends ResourceCollection
 {
-    public $collects = ProductResource::class;
+
+    public $collects = PostResource::class;
 
     /**
      * Transform the resource collection into an array.
