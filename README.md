@@ -5,6 +5,16 @@ Technical Assesment for Pixarron.
 App running live on Heroku: http://pixarron-challenge.herokuapp.com/  
 (It may take a while for the first time to load since it is running on a free dynos).
 
+### Credentials
+
+Admin User:  
+*Email: admin@test.com
+Password: pixarron2021*
+
+Client User:  
+*Email: client1@test.com
+Password: pixarron2021*
+
 ## Local Installation Process
 
 ### Step 1: Clone repository
@@ -64,11 +74,3 @@ php artisan serve
 You can now access the server at http://localhost:8000.
 
 Or http://pixarron-challenge.test/login if you use [Valet](https://laravel.com/docs/7.x/valet) on Mac or [Laragon](https://laragon.org/) on Windows.
-
-Admin User:  
-*Email: admin@test.com
-Password: pixarron2021*
-
-Client User:  
-*Email: client1@test.com
-Password: pixarron2021*
