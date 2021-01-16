@@ -15,16 +15,7 @@ class CreateOrdersTable extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-
-            $table->foreignId('user_id')
-                ->nullable()
-                ->constrained()
-                ->onUpdate('cascade')
-                ->onDelete('set null');
-
-            $table->foreignId('user_address_id')
-                ->constrained('addresses');
-
+            $table->foreignId('user_id')->constrained();
             $table->string('payment_gateway')->default('stripe');
             $table->boolean('shipped')->default(false);
             $table->string('error')->nullable();

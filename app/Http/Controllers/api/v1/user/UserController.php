@@ -12,16 +12,39 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::with('addresses')->paginate();
+        if (auth()->user()->hasRole('admin')) {
 
-        return UserCollection::make($users);
+            $users = User::with('addresses')->paginate();
+
+            return UserCollection::make($users);
+
+        } else {
+
+            return response([
+                'message' => 'You don\'t have permission to access this information.'
+            ]);
+
+        }
     }
 
 
     public function show(User $user)
     {
-        return UserResource::make(
-            $user->load(['addresses', 'orders'])
-        );
+        $authUser = auth()->user();
+
+        if ($user->id === $authUser->id || $authUser->hasRole('admin')) {
+
+            return UserResource::make(
+                $user->load(['addresses', 'orders'])
+            );
+
+        } else {
+
+            return response([
+                'message' => 'You can only access your own data. Try /users/'.$authUser->id
+            ]);
+
+        }
+
     }
 }

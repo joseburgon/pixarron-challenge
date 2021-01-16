@@ -13,7 +13,17 @@ class ProductController extends Controller
     public function index()
     {
 
-        return ProductCollection::make(Product::paginate());
+        if (auth()->user()->hasRole('admin')) {
+
+            return ProductCollection::make(Product::paginate());
+
+        } else {
+
+            return response([
+                'message' => 'You don\'t have permission to access this information.'
+            ]);
+
+        }
 
     }
 

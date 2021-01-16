@@ -12,16 +12,42 @@ class OrderController extends Controller
 {
     public function index()
     {
-        $orders = Order::with('user')->paginate();
 
-        return OrderCollection::make($orders);
+        if (auth()->user()->hasRole('admin')) {
+
+            $orders = Order::with('user')->paginate();
+
+            return OrderCollection::make($orders);
+
+        } else {
+
+            return response([
+                'message' => 'You don\'t have permission to access this information.'
+            ]);
+
+        }
+
     }
 
 
     public function show(Order $order)
     {
-        return OrderResource::make(
-            $order->load('user')
-        );
+
+        $authUser = auth()->user();
+
+        if ($authUser->hasRole('admin') || $order->user_id === $authUser->id) {
+
+            return OrderResource::make(
+                $order->load('user')
+            );
+
+        } else {
+
+            return response([
+                'message' => 'You don\'t have permission to access this information.'
+            ]);
+
+        }
+
     }
 }

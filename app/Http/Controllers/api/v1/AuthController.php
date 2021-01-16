@@ -23,6 +23,7 @@ class AuthController extends Controller
             return response([
                 'message' => 'Invalid login credentials.'
             ]);
+
         }
 
         $user = Auth::user();

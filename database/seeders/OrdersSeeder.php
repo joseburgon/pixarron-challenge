@@ -18,28 +18,20 @@ class OrdersSeeder extends Seeder
         $client1 = User::find(1);
         $client2 = User::find(2);
 
-        Order::create([
-           'user_id' => $client1->id,
-           'user_address_id' => $client1->addresses()->first()->id,
-            'shipped' => array_rand([true, false])
-        ]);
+        Order::factory()
+            ->count(3)
+            ->create([
+                'user_id' => $client1->id
+            ]);
 
-        Order::create([
-            'user_id' => $client1->id,
-            'user_address_id' => $client1->addresses()->first()->id,
-            'shipped' => array_rand([true, false])
-        ]);
+        Order::factory()
+            ->count(2)
+            ->create([
+                'user_id' => $client2->id
+            ]);
 
-        Order::create([
-            'user_id' => $client2->id,
-            'user_address_id' => $client2->addresses()->first()->id,
-            'shipped' => array_rand([true, false])
-        ]);
-
-        Order::create([
-            'user_id' => $client2->id,
-            'user_address_id' => $client2->addresses()->first()->id,
-            'shipped' => array_rand([true, false])
-        ]);
+        Order::factory()
+            ->count(30)
+            ->create();
     }
 }

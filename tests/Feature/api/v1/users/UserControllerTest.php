@@ -8,6 +8,7 @@ use App\Models\Address;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Passport\Passport;
+use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class UserControllerTest extends TestCase
@@ -19,19 +20,20 @@ class UserControllerTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        Passport::actingAs(
-            User::factory()->make(),
-            ['create-servers']
-        );
+        $adminRole = Role::create(['name' => 'admin']);
 
-        $user1 = User::factory()->create();
-        Address::factory()->create(['user_id' => $user1->id]);
+        $adminUser = User::factory()->create()->assignRole($adminRole);
 
-        $user2 = User::factory()->create();
-        Address::factory()->create(['user_id' => $user2->id]);
+        Passport::actingAs($adminUser, ['create-servers']);
 
-        $user3 = User::factory()->create();
-        Address::factory()->create(['user_id' => $user3->id]);
+        $clientUser1 = User::factory()->create();
+        Address::factory()->create(['user_id' => $clientUser1->id]);
+
+        $clientUser2 = User::factory()->create();
+        Address::factory()->create(['user_id' => $clientUser2->id]);
+
+        $clientUser3 = User::factory()->create();
+        Address::factory()->create(['user_id' => $clientUser3->id]);
 
         $response = $this->getJson(route('api.v1.users.index'));
 
@@ -39,44 +41,58 @@ class UserControllerTest extends TestCase
             'data' => [
                 [
                     'type' => 'users',
-                    'id' => (string) $user1->getRouteKey(),
+                    'id' => (string) $adminUser->getRouteKey(),
                     'attributes' => [
-                        'name' => $user1->name,
-                        'email' => $user1->email,
+                        'name' => $adminUser->name,
+                        'email' => $adminUser->email,
                     ],
                     'relationships' => [
                         'addresses' => [],
                     ],
                     'links' => [
-                        'self' => route('api.v1.users.show', $user1)
+                        'self' => route('api.v1.users.show', $adminUser)
                     ]
                 ],
                 [
                     'type' => 'users',
-                    'id' => (string) $user2->getRouteKey(),
+                    'id' => (string) $clientUser1->getRouteKey(),
                     'attributes' => [
-                        'name' => $user2->name,
-                        'email' => $user2->email,
+                        'name' => $clientUser1->name,
+                        'email' => $clientUser1->email,
                     ],
                     'relationships' => [
                         'addresses' => [],
                     ],
                     'links' => [
-                        'self' => route('api.v1.users.show', $user2)
+                        'self' => route('api.v1.users.show', $clientUser1)
                     ]
                 ],
                 [
                     'type' => 'users',
-                    'id' => (string) $user3->getRouteKey(),
+                    'id' => (string) $clientUser2->getRouteKey(),
                     'attributes' => [
-                        'name' => $user3->name,
-                        'email' => $user3->email,
+                        'name' => $clientUser2->name,
+                        'email' => $clientUser2->email,
                     ],
                     'relationships' => [
                         'addresses' => [],
                     ],
                     'links' => [
-                        'self' => route('api.v1.users.show', $user3)
+                        'self' => route('api.v1.users.show', $clientUser2)
+                    ]
+                ],
+                [
+                    'type' => 'users',
+                    'id' => (string) $clientUser3->getRouteKey(),
+                    'attributes' => [
+                        'name' => $clientUser3->name,
+                        'email' => $clientUser3->email,
+                    ],
+                    'relationships' => [
+                        'addresses' => [],
+                    ],
+                    'links' => [
+                        'self' => route('api.v1.users.show', $clientUser3)
                     ]
                 ],
             ],
@@ -88,25 +104,28 @@ class UserControllerTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        Passport::actingAs(
-            User::factory()->create(),
-            ['create-servers']
-        );
+        $clientRole = Role::create(['name' => 'client']);
 
-        $user = User::factory()->create();
+        $clientUser = User::factory()->create()->assignRole($clientRole);
 
-        $response = $this->getJson(route('api.v1.users.show', $user));
+        Passport::actingAs($clientUser, ['create-servers']);
+
+        $response = $this->getJson(route('api.v1.users.show', $clientUser));
 
         $response->assertJson([
            'data' => [
                'type' => 'users',
-               'id' => (string) $user->getRouteKey(),
+               'id' => (string) $clientUser->getRouteKey(),
                'attributes' => [
-                   'name' => $user->name,
-                   'email' => $user->email,
+                   'name' => $clientUser->name,
+                   'email' => $clientUser->email,
+               ],
+               'relationships' => [
+                   'addresses' => [],
+                   'orders' => [],
                ],
                'links' => [
-                   'self' => route('api.v1.users.show', $user)
+                   'self' => route('api.v1.users.show', $clientUser)
                ]
            ]
         ]);

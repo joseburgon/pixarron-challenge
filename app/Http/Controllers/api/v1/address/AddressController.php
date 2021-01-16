@@ -12,16 +12,42 @@ class AddressController extends Controller
 {
     public function index()
     {
-        $addresses = Address::with(['user'])->paginate();
 
-        return AddressCollection::make($addresses);
+        if (auth()->user()->hasRole('admin')) {
+
+            $addresses = Address::with(['user'])->paginate();
+
+            return AddressCollection::make($addresses);
+
+        } else {
+
+            return response([
+                'message' => 'You don\'t have permission to access this information.'
+            ]);
+
+        }
+
     }
 
 
     public function show(Address $address)
     {
-        return AddressResource::make(
-            $address->load('user')
-        );
+
+        $authUser = auth()->user();
+
+        if ($authUser->hasRole('admin') || $address->user_id === $authUser->id) {
+
+            return AddressResource::make(
+                $address->load('user')
+            );
+
+        } else {
+
+            return response([
+                'message' => 'You don\'t have permission to access this information.'
+            ]);
+
+        }
+
     }
 }

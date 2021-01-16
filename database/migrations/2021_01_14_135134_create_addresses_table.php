@@ -21,6 +21,9 @@ class CreateAddressesTable extends Migration
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
 
+            $table->boolean('default')
+                ->default(false);
+
             $table->string('street');
             $table->string('city');
             $table->string('state');

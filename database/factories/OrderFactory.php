@@ -22,8 +22,7 @@ class OrderFactory extends Factory
     public function definition()
     {
         return [
-            'user_id' => $this->faker->numberBetween(1, 2),
-            'user_address_id' => $this->faker->numberBetween(1, 2),
+            'user_id' => $this->faker->numberBetween(4, 33),
             'payment_gateway' => 'stripe',
             'shipped' => array_rand([true, false]),
         ];

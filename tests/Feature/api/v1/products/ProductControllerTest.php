@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Passport\Passport;
+use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class ProductControllerTest extends TestCase
@@ -18,10 +19,11 @@ class ProductControllerTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        Passport::actingAs(
-            User::factory()->make(),
-            ['create-servers']
-        );
+        $adminRole = Role::create(['name' => 'admin']);
+
+        $adminUser = User::factory()->create()->assignRole($adminRole);
+
+        Passport::actingAs($adminUser, ['create-servers']);
 
         $product1 = Product::factory()->create();
 

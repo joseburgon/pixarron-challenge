@@ -8,6 +8,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Passport\Passport;
+use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class OrderControllerTest extends TestCase
@@ -19,33 +20,35 @@ class OrderControllerTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        Passport::actingAs(
-            User::factory()->make(),
-            ['create-servers']
-        );
+        $adminRole = Role::create(['name' => 'admin']);
 
-        $user1 = User::factory()->create();
-        Address::factory()->create(['user_id' => $user1->id]);
+        $adminUser = User::factory()->create()->assignRole($adminRole);
+
+        Passport::actingAs($adminUser, ['create-servers']);
+
+        $user1 = User::factory()
+            ->has(Address::factory()->count(1))
+            ->create();
 
         $order1 = Order::factory()->create([
-            'user_id' => $user1->id,
-            'user_address_id' => $user1->addresses()->first()->id
+            'user_id' => $user1->id
         ]);
 
-        $user2 = User::factory()->create();
-        Address::factory()->create(['user_id' => $user2->id]);
+
+        $user2 = User::factory()
+            ->has(Address::factory()->count(1))
+            ->create();
 
         $order2 = Order::factory()->create([
             'user_id' => $user2->id,
-            'user_address_id' => $user2->addresses()->first()->id
         ]);
 
-        $user3 = User::factory()->create();
-        Address::factory()->create(['user_id' => $user3->id]);
+        $user3 = User::factory()
+            ->has(Address::factory()->count(1))
+            ->create();
 
         $order3 = Order::factory()->create([
             'user_id' => $user3->id,
-            'user_address_id' => $user3->addresses()->first()->id
         ]);
 
         $response = $this->getJson(route('api.v1.orders.index'));
@@ -54,12 +57,11 @@ class OrderControllerTest extends TestCase
             'data' => [
                 [
                     'type' => 'orders',
-                    'id' => (string) $order1->id,
+                    'id' => (string)$order1->id,
                     'attributes' => [
-                        'user_id' => (string) $order1->user_id,
-                        'user_address_id' => (string) $order1->user_address_id,
+                        'user_id' => (string)$order1->user_id,
                         'payment_gateway' => $order1->payment_gateway,
-                        'shipped' => (boolean) $order1->shipped,
+                        'shipped' => (boolean)$order1->shipped,
                         'error' => $order1->error,
                         'created_at' => Carbon::parse($order1->created_at)->format(DATE_RFC2822),
                         'updated_at' => Carbon::parse($order1->updated_at)->format(DATE_RFC2822),
@@ -73,12 +75,12 @@ class OrderControllerTest extends TestCase
                 ],
                 [
                     'type' => 'orders',
-                    'id' => (string) $order2->id,
+                    'id' => (string)$order2->id,
                     'attributes' => [
-                        'user_id' => (string) $order2->user_id,
+                        'user_id' => (string)$order2->user_id,
                         'user_address_id' => $order2->user_address_id,
                         'payment_gateway' => $order2->payment_gateway,
-                        'shipped' => (boolean) $order2->shipped,
+                        'shipped' => (boolean)$order2->shipped,
                         'error' => $order2->error,
                         'created_at' => Carbon::parse($order2->created_at)->format(DATE_RFC2822),
                         'updated_at' => Carbon::parse($order2->updated_at)->format(DATE_RFC2822),
@@ -92,12 +94,12 @@ class OrderControllerTest extends TestCase
                 ],
                 [
                     'type' => 'orders',
-                    'id' => (string) $order3->id,
+                    'id' => (string)$order3->id,
                     'attributes' => [
-                        'user_id' => (string) $order3->user_id,
+                        'user_id' => (string)$order3->user_id,
                         'user_address_id' => $order3->user_address_id,
                         'payment_gateway' => $order3->payment_gateway,
-                        'shipped' => (boolean) $order3->shipped,
+                        'shipped' => (boolean)$order3->shipped,
                         'error' => $order3->error,
                         'created_at' => Carbon::parse($order3->created_at)->format(DATE_RFC2822),
                         'updated_at' => Carbon::parse($order3->updated_at)->format(DATE_RFC2822),

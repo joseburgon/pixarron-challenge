@@ -22,11 +22,11 @@ class AddressFactory extends Factory
     public function definition()
     {
         return [
-            'user_id' => $this->faker->numberBetween(1, 2),
+            'user_id' => $this->faker->numberBetween(4, 33),
             'street' => $this->faker->streetAddress(),
             'city' => $this->faker->city(),
             'state' => $this->faker->stateAbbr(),
-            'country' => $this->faker->country(),
+            'country' => 'United States of America',
             'zip_code' => $this->faker->postcode(),
         ];
     }
