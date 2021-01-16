@@ -29,6 +29,17 @@ class Order extends Model
 
     }
 
+    public function scopeAllowed($query)
+    {
+        if (auth()->user()->hasRole('admin')) {
+
+            return $query;
+
+        }
+
+        return $query->where('user_id', auth()->user()->id);
+    }
+
     public function products()
     {
         return $this->belongsToMany(Product::class);

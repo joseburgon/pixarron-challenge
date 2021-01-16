@@ -13,19 +13,11 @@ class AddressController extends Controller
     public function index()
     {
 
-        if (auth()->user()->hasRole('admin')) {
+        $addresses = Address::allowed()
+            ->with(['user'])
+            ->paginate();
 
-            $addresses = Address::with(['user'])->paginate();
-
-            return AddressCollection::make($addresses);
-
-        } else {
-
-            return response([
-                'message' => 'You don\'t have permission to access this information.'
-            ]);
-
-        }
+        return AddressCollection::make($addresses);
 
     }
 

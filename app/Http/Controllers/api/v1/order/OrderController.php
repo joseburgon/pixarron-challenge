@@ -13,19 +13,11 @@ class OrderController extends Controller
     public function index()
     {
 
-        if (auth()->user()->hasRole('admin')) {
+        $orders = Order::allowed()
+            ->with('user')
+            ->paginate();
 
-            $orders = Order::with('user')->paginate();
-
-            return OrderCollection::make($orders);
-
-        } else {
-
-            return response([
-                'message' => 'You don\'t have permission to access this information.'
-            ]);
-
-        }
+        return OrderCollection::make($orders);
 
     }
 

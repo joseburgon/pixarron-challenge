@@ -13,6 +13,20 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::redirect('/', '/login');
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth'])->name('dashboard');
+
+Route::prefix('dashboard')->middleware('role:admin')->group(function () {
+
+    Route::get('/users', [\App\Http\Controllers\Admin\User\UserController::class, 'index'])
+        ->name('users.index');
+
+    Route::get('/orders', [\App\Http\Controllers\Admin\Order\OrderController::class, 'index'])
+        ->name('orders.index');
+
 });
+
+require __DIR__.'/auth.php';
