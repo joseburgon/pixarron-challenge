@@ -2,7 +2,7 @@
 
 Technical Assesment for Pixarron.
 
-App running live on Heroku: http://pixarron-challenge.herokuapp.com/  
+App running live on Heroku: https://pixarron-challenge.herokuapp.com/  
 (It may take a while for the first time to load since it is running on a free dynos).
 
 ### Credentials
