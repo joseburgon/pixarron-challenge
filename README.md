@@ -22,7 +22,7 @@ https://documenter.getpostman.com/view/12059338/TVzViG2R
 
 ### Step 1: Clone repository
 
-If it's Windows we highly recommend using [Laragon](https://laragon.org/) as a local development environment.
+If it's Windows I highly recommend using [Laragon](https://laragon.org/) as a local development environment.
 
 ```
 git clone https://github.com/joseburgon/pixarron-challenge.git

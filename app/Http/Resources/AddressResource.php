@@ -20,6 +20,7 @@ class AddressResource extends JsonResource
             'id' => (string) $this->resource->getRouteKey(),
             'attributes' => [
                 'user_id' => $this->resource->user_id,
+                'default' => (boolean) $this->resource->default,
                 'street' => $this->resource->street,
                 'city' => $this->resource->city,
                 'state' => $this->resource->state,
